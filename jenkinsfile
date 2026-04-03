@@ -1,14 +1,14 @@
 pipeline {
     agent any
 	tools {
-	maven 'mymave'
-	jdk 'myjdk'
+	maven 'maven'
+	jdk 'jdk'
 	}
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/lakshmansrikanth123/poultry-healthy-hens-java.git']])
+				checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/myself-8816/poultry-healthy-hens-java.git']])
             }
         }
 
@@ -30,7 +30,7 @@ pipeline {
 
         stage('JENKINS TO NEXUS') {
             steps {
-              withMaven(globalMavenSettingsConfig: 'settings.xml', jdk: 'myjdk', maven: 'mymave', traceability: true) {
+              withMaven(globalMavenSettingsConfig: 'settings.xml', jdk: 'jdk', maven: 'maven', traceability: true) {
              sh 'mvn deploy'
              }
             }
@@ -44,7 +44,7 @@ stage('Download WAR') {
     )]) {
         sh '''
         wget --user=$NEXUS_USER --password=$NEXUS_PASS \
-        http://100.31.69.74:8081/repository/maven-releases/com/poultry/healthy-hens/1.0/healthy-hens-1.0.war
+        http://13.235.99.159:8081/repository/maven-releases/com/poultry/healthy-hens/1.0/healthy-hens-1.0.war
         '''
     }
   }
@@ -52,7 +52,7 @@ stage('Download WAR') {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t varsha0411/srikanthfullflow:v1 .'
+                sh 'docker build -t pavansai33/pouimage:v1 .'
             }
         }
 		stage('Login to Docker Hub') {
@@ -69,7 +69,7 @@ stage('Download WAR') {
 
         stage('Push Docker Image') {
             steps {
-                sh 'docker push varsha0411/srikanthfullflow:v1'
+                sh 'docker push pavansai33/pouimage:v1'
             }
         }
 		        stage('K8s Deployment') {
