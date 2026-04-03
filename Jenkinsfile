@@ -78,7 +78,7 @@ stage('Download WAR') {
                 sh '''
                 export KUBECONFIG=$KUBECONFIG
                 kubectl get nodes
-                kubectl apply -f fulldep.yml
+                kubectl apply -f deployment.yml
                 '''
         }
     }
